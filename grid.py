@@ -21,8 +21,6 @@ class Grid(object):
 		while bombNotPlaced:
 			x = randint(0,self.width-1)
 			y = randint(0,self.heigth-1)
-			print(x)
-			print(y)
 			if self.mapWithoutFog[y][x] == 0:
 				self.mapWithoutFog[y][x] = 1
 				bombNotPlaced = False
@@ -58,11 +56,18 @@ class Grid(object):
 			if x <= self.width and y <= self.heigth:
 				squareNotOkay = False
 
-			self.reveal(x,y)
+			self.intelligentReveal(x,y)
 
 	def reveal(self,x,y):
 		self.mapWithFog[y][x] = self.mapWithoutFog[y][x]
 
+	def intelligentReveal(self,x,y):
+		self.mapWithFog[y][x] = self.mapWithoutFog[y][x]
+		if self.mapWithFog[y][x] == 0:
+			for i in range(max(0, x-1), min(x+2, self.width)):
+				for j in range(max(0, y-1), min(y+2, self.heigth)):
+					if self.mapWithFog[j][i] == -1:
+						self.intelligentReveal(i,j)
 
 	def display(self):
 		print(self.mapWithoutFog)
