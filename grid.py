@@ -46,12 +46,12 @@ class Grid(object):
 			try:
 				x = int(raw_input("Column?: "))-1
 			except ValueError:
-				print "Incorrect column number"
+				print("Incorrect column number")
 
 			try:
 				y = int(raw_input("Row?: "))-1
 			except ValueError:
-				print "Incorrect row number"
+				print("Incorrect row number")
 
 			if x <= self.width and y <= self.heigth:
 				squareNotOkay = False
