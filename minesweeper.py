@@ -9,12 +9,12 @@ class MineSweeper(object):
         self.play()
 
     def play(self):
-        #while True:
+        while True:
             self.grid.generate()
             print("ok")
 
             while self.isPlaying:
-                #self.grid.pickNextSquare()
+                self.grid.pickNextSquare()
                 #self.isPlaying = self.grid.hasFinished()
                 self.grid.display()
                 time.sleep(5)
