@@ -1,4 +1,5 @@
 from random import randint
+import copy
 
 class Grid(object):
 	def __init__(self):
@@ -12,7 +13,8 @@ class Grid(object):
 		self.mapWithoutFog = [[0]*self.width for row in range(self.heigth)]
 		for i in range(self.numberOfMines):
 			self.addBomb()
-		self.numerizeMap(self.mapWithoutFog)
+		booleanMap = copy.deepcopy(self.mapWithoutFog)
+		self.numerizeMap(booleanMap)
 
 		self.mapWithFog = [[-1]*self.width for row in range(self.heigth)]
 
@@ -35,7 +37,7 @@ class Grid(object):
 					for x in range(max(0, i-1), min(i+2, self.width)):
 						for y in range(max(0, j-1), min(j+2, self.heigth)):
 							if booleanMap[y][x] == 1:
-								neighbourMines=+1
+								neighbourMines += 1
 					self.mapWithoutFog[j][i] = neighbourMines
 
 	def pickNextSquare(self):
