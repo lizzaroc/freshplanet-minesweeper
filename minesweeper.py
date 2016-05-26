@@ -1,20 +1,16 @@
 import random
 import time
-from grid import Grid
-from graphicalinterface import GraphicalInterface
+from graphicalinterface import MSGraphicalInterface
 
-class MineSweeper(object):
+class MSMineSweeper(object):
     def __init__(self):
-        self.isPlaying = True
-        self.grid = Grid()
-        self.graphicalInterface = GraphicalInterface(self.grid)
+        self.graphicalInterface = MSGraphicalInterface()
         self.play()
 
     def play(self):
-        while True:
-            self.grid.generate()
-            self.graphicalInterface.display()
+        self.graphicalInterface.display()
 
 if __name__ == "__main__":
-    mineSweeper = MineSweeper()
+    mineSweeper = MSMineSweeper()
+    print("just testing something")
     mineSweeper.play()

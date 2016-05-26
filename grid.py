@@ -1,13 +1,13 @@
 from random import randint
 import copy
 
-class Grid(object):
-	def __init__(self):
+class MSGrid(object):
+	def __init__(self,heigth,width,mines):
 		self.mapWithoutFog = []
 		self.mapWithFog = []
-		self.heigth = 5
-		self.width = 5
-		self.numberOfMines = 3
+		self.heigth = heigth
+		self.width = width
+		self.numberOfMines = mines
 
 	def generate(self):
 		self.mapWithoutFog = [[0]*self.width for row in range(self.heigth)]
