@@ -40,6 +40,7 @@ class Grid(object):
 								neighbourMines += 1
 					self.mapWithoutFog[j][i] = neighbourMines
 
+	# This function isn't used anymore, it served in the console interface
 	def pickNextSquare(self):
 		squareNotOkay = True
 		while squareNotOkay:
@@ -60,6 +61,9 @@ class Grid(object):
 
 			self.intelligentReveal(x,y)
 
+	def isBomb(self,x,y):
+		return(self.mapWithoutFog[y][x] == 9)
+
 	def reveal(self,x,y):
 		self.mapWithFog[y][x] = self.mapWithoutFog[y][x]
 
@@ -70,6 +74,14 @@ class Grid(object):
 				for j in range(max(0, y-1), min(y+2, self.heigth)):
 					if self.mapWithFog[j][i] == -1:
 						self.intelligentReveal(i,j)
+
+	def isFinished(self):
+		isFinished = True
+		for i in range(self.width):
+			for j in range(self.heigth):
+				if self.mapWithoutFog[j][i] != 9 and self.mapWithFog[j][i] == -1:
+					isFinished = False
+		return isFinished
 
 	def display(self):
 		print(self.mapWithoutFog)
