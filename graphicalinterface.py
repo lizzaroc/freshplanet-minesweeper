@@ -5,6 +5,7 @@ from grid import MSGrid
 class MSGraphicalInterface(object):
 	def __init__(self):
 		self.grid = MSGrid(20,20,30)
+		self.buttonsGrid = [[0 for i in range(self.grid.width)] for j in range(self.grid.heigth)]
 		self.window = Tk()
 		self.frame=Frame(self.window)
 		self.askGridFormat()
@@ -41,6 +42,7 @@ class MSGraphicalInterface(object):
 		self.window = Tk()
 		self.frame=Frame(self.window)
 		self.grid = MSGrid(heigth, width, mines)
+		self.buttonsGrid = [[0 for i in range(width)] for j in range(heigth)]
 		self.grid.generate()
 		self.display()
 		
@@ -55,14 +57,22 @@ class MSGraphicalInterface(object):
 		Grid.rowconfigure(self.frame, 7, weight=1)
 		Grid.columnconfigure(self.frame, 7, weight=1)
 
-		self.update()
+		changingButtons = []
+		for x in range(self.grid.width):
+			for y in range(self.grid.heigth):
+				self.buttonsGrid[y][x] = Button(self.frame, text="", command=self.leftClickWrapper(x,y))
+				self.buttonsGrid[y][x].config(height = 1, width = 1)
+				self.buttonsGrid[y][x].grid(column=x, row=y, sticky=N+S+E+W)
+
+		self.update(changingButtons)
 		self.window.mainloop()
 
-	def update(self):
-		for x in range(self.grid.heigth):
-			for y in range(self.grid.width):
-				button = Button(self.frame, text=str(self.grid.mapWithFog[y][x]), command= self.leftClickWrapper(x,y))
-				button.grid(column=x, row=y, sticky=N+S+E+W)
+	def update(self,changingButtons):
+		for toUpdateButton in changingButtons:
+			x = toUpdateButton[0]
+			y = toUpdateButton[1]
+			value = toUpdateButton[2]
+			self.buttonsGrid[y][x].config(text=	str(self.grid.mapWithFog[y][x]))
 
 	def leftClickWrapper(self,x,y):
 		def hasLeftClicked(i=x,j=y):
@@ -72,7 +82,7 @@ class MSGraphicalInterface(object):
 				else:
 					print("okay :(")
 
-			self.grid.intelligentReveal(i,j)
+			changingButtons = self.grid.intelligentReveal(i,j)
 
 			if self.grid.isFinished():
 				if askyesno("Congratulations! You won!", "Wanna play again?"):
@@ -80,5 +90,5 @@ class MSGraphicalInterface(object):
 				else:
 					print("okay :(")
 
-			self.update()
+			self.update(changingButtons)
 		return hasLeftClicked

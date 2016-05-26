@@ -69,11 +69,13 @@ class MSGrid(object):
 
 	def intelligentReveal(self,x,y):
 		self.mapWithFog[y][x] = self.mapWithoutFog[y][x]
+		toUpdateCells = [[x,y,self.mapWithoutFog[y][x]]]
 		if self.mapWithFog[y][x] == 0:
 			for i in range(max(0, x-1), min(x+2, self.width)):
 				for j in range(max(0, y-1), min(y+2, self.heigth)):
 					if self.mapWithFog[j][i] == -1:
-						self.intelligentReveal(i,j)
+						toUpdateCells= toUpdateCells + self.intelligentReveal(i,j)
+		return toUpdateCells
 
 	def isFinished(self):
 		isFinished = True
