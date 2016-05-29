@@ -63,6 +63,7 @@ class MSGraphicalInterface(object):
 			for y in range(self.grid.heigth):
 				self.buttonsGrid[y][x] = Button(self.frame, text="", command=self.leftClickWrapper(x,y))
 				self.buttonsGrid[y][x].bind("<Button-2>", self.rightClickWrapper(0,x,y))
+				self.buttonsGrid[y][x].bind("<Button-3>", self.doubleClickWrapper(0,x,y))
 				self.buttonsGrid[y][x].config(height = 1, width = 1)
 				self.buttonsGrid[y][x].grid(column=x, row=y, sticky=N+S+E+W)
 
@@ -78,11 +79,7 @@ class MSGraphicalInterface(object):
 	def leftClickWrapper(self,x,y):
 		def hasLeftClicked(i=x,j=y):
 			if self.grid.isBomb(x,y):
-				if askretrycancel("You lost", "Wanna try again?"):
-					self.setGrid(self.grid.heigth,self.grid.width,self.grid.numberOfMines)
-				else:
-					showinfo("Okay :(", "See you next time!")
-					self.quit()
+				self.hasLost()
 			else:
 				changingButtons = self.grid.intelligentReveal(i,j)
 				self.update(changingButtons)
@@ -100,6 +97,22 @@ class MSGraphicalInterface(object):
 		def hasRightClicked(Event=None,i=x,j=y):
 			self.update([[i,j,self.grid.flag(i,j)]])
 		return hasRightClicked
+
+	def doubleClickWrapper(self,event,x,y):
+		def hasDoubleClicked(Event=None,i=x,j=y):
+			print("double clic")
+			hasFailed,toUpdate = self.grid.flagReveal(i,j)
+			self.update(toUpdate)
+			if hasFailed:
+				self.hasLost()
+		return hasDoubleClicked
+
+	def hasLost(self):
+		if askretrycancel("You lost", "Wanna try again?"):
+			self.setGrid(self.grid.heigth,self.grid.width,self.grid.numberOfMines)
+		else:
+			showinfo("Okay :(", "See you next time!")
+			self.quit()
 
 	def quit(self):
 		self.window.destroy()
