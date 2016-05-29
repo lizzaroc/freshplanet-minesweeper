@@ -8,6 +8,7 @@ class MSGrid(object):
 		self.heigth = heigth
 		self.width = width
 		self.numberOfMines = mines
+		self.numberOfMinesLeft = mines
 
 	def generate(self):
 		self.mapWithoutFog = [[0]*self.width for row in range(self.heigth)]
@@ -65,7 +66,11 @@ class MSGrid(object):
 		return(self.mapWithoutFog[y][x] == 9)
 
 	def flag(self,x,y):
-		self.mapWithFog[y][x] = 10
+		if self.mapWithFog[y][x] == 10:
+			self.mapWithFog[y][x] = -1
+		else:
+			 self.mapWithFog[y][x] = 10
+		return self.mapWithFog[y][x]
 
 	def reveal(self,x,y):
 		self.mapWithFog[y][x] = self.mapWithoutFog[y][x]

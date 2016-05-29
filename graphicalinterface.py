@@ -95,6 +95,7 @@ class MSGraphicalInterface(object):
 
 	def rightClickWrapper(self,event,x,y):
 		def hasRightClicked(Event=None,i=x,j=y):
-			self.grid.flag(i,j)
-			self.update([[i,j,10]])
+			self.update([[i,j,self.grid.flag(i,j)]])
 		return hasRightClicked
+
+		s
