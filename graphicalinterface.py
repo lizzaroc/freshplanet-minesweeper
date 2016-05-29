@@ -1,6 +1,7 @@
 from Tkinter import *
 from tkMessageBox import *
 from grid import MSGrid
+import sys
 
 class MSGraphicalInterface(object):
 	def __init__(self):
@@ -78,19 +79,21 @@ class MSGraphicalInterface(object):
 		def hasLeftClicked(i=x,j=y):
 			if self.grid.isBomb(x,y):
 				if askretrycancel("You lost", "Wanna try again?"):
-					print("To be implemented: try again")
+					self.setGrid(self.grid.heigth,self.grid.width,self.grid.numberOfMines)
 				else:
-					print("okay :(")
-
-			changingButtons = self.grid.intelligentReveal(i,j)
+					showinfo("Okay :(", "See you next time!")
+					self.quit()
+			else:
+				changingButtons = self.grid.intelligentReveal(i,j)
+				self.update(changingButtons)
 
 			if self.grid.isFinished():
 				if askyesno("Congratulations! You won!", "Wanna play again?"):
-					print("to be implemented: play again")
+					self.setGrid(self.grid.heigth,self.grid.width,self.grid.numberOfMines)
 				else:
-					print("okay :(")
+					showinfo("Okay :(", "See you next time!")
+					self.quit()
 
-			self.update(changingButtons)
 		return hasLeftClicked
 
 	def rightClickWrapper(self,event,x,y):
@@ -98,4 +101,7 @@ class MSGraphicalInterface(object):
 			self.update([[i,j,self.grid.flag(i,j)]])
 		return hasRightClicked
 
-		s
+	def quit(self):
+		self.window.destroy()
+		sys.exit()
+
