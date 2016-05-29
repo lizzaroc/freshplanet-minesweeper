@@ -61,11 +61,11 @@ class MSGraphicalInterface(object):
 		for x in range(self.grid.width):
 			for y in range(self.grid.heigth):
 				self.buttonsGrid[y][x] = Button(self.frame, text="", command=self.leftClickWrapper(x,y))
+				self.buttonsGrid[y][x].bind("<Button-2>", self.rightClickWrapper(0,x,y))
 				self.buttonsGrid[y][x].config(height = 1, width = 1)
 				self.buttonsGrid[y][x].grid(column=x, row=y, sticky=N+S+E+W)
 
 		self.update(changingButtons)
-		self.window.mainloop()
 
 	def update(self,changingButtons):
 		for toUpdateButton in changingButtons:
@@ -92,3 +92,9 @@ class MSGraphicalInterface(object):
 
 			self.update(changingButtons)
 		return hasLeftClicked
+
+	def rightClickWrapper(self,event,x,y):
+		def hasRightClicked(Event=None,i=x,j=y):
+			self.grid.flag(i,j)
+			self.update([[i,j,10]])
+		return hasRightClicked

@@ -64,6 +64,9 @@ class MSGrid(object):
 	def isBomb(self,x,y):
 		return(self.mapWithoutFog[y][x] == 9)
 
+	def flag(self,x,y):
+		self.mapWithFog[y][x] = 10
+
 	def reveal(self,x,y):
 		self.mapWithFog[y][x] = self.mapWithoutFog[y][x]
 
