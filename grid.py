@@ -68,8 +68,10 @@ class MSGrid(object):
 	def flag(self,x,y):
 		if self.mapWithFog[y][x] == 10:
 			self.mapWithFog[y][x] = -1
+			self.numberOfMinesLeft += 1
 		elif self.mapWithFog[y][x] == -1:
 			 self.mapWithFog[y][x] = 10
+			 self.numberOfMinesLeft -= 1
 		return self.mapWithFog[y][x]
 
 	def isntFlag(self,x,y):

@@ -8,7 +8,7 @@ class MSGraphicalInterface(object):
 		self.grid = MSGrid(20,20,30)
 		self.buttonsGrid = [[0 for i in range(self.grid.width)] for j in range(self.grid.heigth)]
 		self.window = Tk()
-		self.frame=Frame(self.window)
+		self.gridCanvas=Canvas(self.window)
 		self.askGridFormat()
 
 	def askGridFormat(self):
@@ -41,8 +41,11 @@ class MSGraphicalInterface(object):
 	def setGrid(self,heigth,width,mines):
 		self.window.destroy()
 		self.window = Tk()
-		self.frame=Frame(self.window)
 		self.grid = MSGrid(heigth, width, mines)
+		self.minesLeftLabel1 = Label(self.window, text="Number of mines left: " + str(self.grid.numberOfMines))
+		self.minesLeftLabel1.pack()
+
+		self.gridCanvas=Frame(self.window)
 		self.buttonsGrid = [[0 for i in range(width)] for j in range(heigth)]
 		self.grid.generate()
 		self.display()
@@ -51,17 +54,19 @@ class MSGraphicalInterface(object):
 		Grid.rowconfigure(self.window, 0, weight=1)
 		Grid.columnconfigure(self.window, 0, weight=1)
 
-		self.frame.grid(row=0, column=0, sticky=N+S+E+W)
-		grid=Frame(self.frame)
+		self.gridCanvas.grid(row=0, column=0, sticky=N+S+E+W)
+		grid=Frame(self.gridCanvas)
 
 		grid.grid(sticky=N+S+E+W, column=0, row=7, columnspan=2)
-		Grid.rowconfigure(self.frame, 7, weight=1)
-		Grid.columnconfigure(self.frame, 7, weight=1)
+		Grid.rowconfigure(self.gridCanvas, 7, weight=1)
+		Grid.columnconfigure(self.gridCanvas, 7, weight=1)
+
+		self.gridCanvas.pack()
 
 		changingButtons = []
 		for x in range(self.grid.width):
 			for y in range(self.grid.heigth):
-				self.buttonsGrid[y][x] = Button(self.frame, text="", command=self.leftClickWrapper(x,y))
+				self.buttonsGrid[y][x] = Button(self.gridCanvas, text="", command=self.leftClickWrapper(x,y))
 				self.buttonsGrid[y][x].bind("<Button-2>", self.rightClickWrapper(0,x,y))
 				self.buttonsGrid[y][x].bind("<Button-3>", self.doubleClickWrapper(0,x,y))
 				self.buttonsGrid[y][x].config(height = 1, width = 1)
@@ -96,6 +101,7 @@ class MSGraphicalInterface(object):
 	def rightClickWrapper(self,event,x,y):
 		def hasRightClicked(Event=None,i=x,j=y):
 			self.update([[i,j,self.grid.flag(i,j)]])
+			self.minesLeftLabel1.config(text="Number of mines left: " + str(self.grid.numberOfMinesLeft))
 		return hasRightClicked
 
 	def doubleClickWrapper(self,event,x,y):
