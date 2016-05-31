@@ -16,9 +16,11 @@ class MSGraphicalInterface(object):
 		self.buttonsGrid = [[0 for i in range(self.grid.width)] for j in range(self.grid.heigth)]
 		NoDefaultRoot()
 		self.window = Tk()
+		self.window.wm_title("Alexandre's minesweeper")
 		self.askGridCanvas = Canvas(self.window)
 		self.gridCanvas=Canvas(self.window)
 		self.loadImages()
+		self.firstClick = True
 		self.askGridFormat()
 
 	def askGridFormat(self):
@@ -144,8 +146,13 @@ class MSGraphicalInterface(object):
 	def leftClickWrapper(self,x,y):
 		def hasLeftClicked(i=x,j=y):
 			if self.grid.isBomb(x,y):
-				self.hasLost()
+				if self.firstClick:
+					self.setGrid(self.grid.heigth,self.grid.width,self.grid.numberOfMines)
+					hasLeftClicked(i,j)
+				else:
+					self.hasLost()
 			else:
+				self.firstClick = False
 				changingButtons = self.grid.intelligentReveal(i,j)
 				self.update(changingButtons)
 
