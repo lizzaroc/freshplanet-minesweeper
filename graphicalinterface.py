@@ -5,6 +5,11 @@ import sys
 
 from PIL import ImageTk
 
+def enum(**enums):
+	return type('Enum', (), enums)
+
+States = enum(UNDISCOVERED=-1,CLEAN=0,BOMB=9,FLAG=10,QUESTIONMARK=11)
+
 class MSGraphicalInterface(object):
 	def __init__(self):
 		self.grid = MSGrid(20,20,30)
@@ -18,17 +23,17 @@ class MSGraphicalInterface(object):
 
 	def askGridFormat(self):
 		heigthLabel = Label(self.askGridCanvas, text="Heigth?")
-		heigthSpinbox = Spinbox(self.askGridCanvas, from_=10, to=50)
+		heigthSpinbox = Spinbox(self.askGridCanvas, from_=10, to=30)
 		heigthLabel.pack()
 		heigthSpinbox.pack()
 
 		widthLabel = Label(self.askGridCanvas, text="Width?")
-		widthSpinbox = Spinbox(self.askGridCanvas, from_=10, to=50)
+		widthSpinbox = Spinbox(self.askGridCanvas, from_=10, to=30)
 		widthLabel.pack()
 		widthSpinbox.pack()
 
 		minesLabel = Label(self.askGridCanvas, text="Number of mines?")
-		minesSpinbox = Spinbox(self.askGridCanvas, from_=10, to=99)
+		minesSpinbox = Spinbox(self.askGridCanvas, from_=10, to=300)
 		minesLabel.pack()
 		minesSpinbox.pack()
 
@@ -96,15 +101,15 @@ class MSGraphicalInterface(object):
 		self.fiveMineImage = ImageTk.PhotoImage(master = self.gridCanvas, file = "5.gif")
 		self.sixMinesImage = ImageTk.PhotoImage(master= self.gridCanvas, file = "6.gif")
 		self.sevenMineImage = ImageTk.PhotoImage(master = self.gridCanvas, file = "7.gif")
-		self.eigthMinesImage = ImageTk.PhotoImage(master= self.gridCanvas, file = "8.gif")
+		self.eightMinesImage = ImageTk.PhotoImage(master= self.gridCanvas, file = "8.gif")
 		self.bombImage =ImageTk.PhotoImage(master = self.gridCanvas, file = "bomb.gif")
 		self.flagImage = ImageTk.PhotoImage(master= self.gridCanvas, file = "flag.gif")
 		self.questionMarkImage = ImageTk.PhotoImage(master = self.gridCanvas, file = "questionMark.gif")
 
 	def imageForValue(self,value):
-		if value == -1:
+		if value == States.UNDISCOVERED:
 			return self.undiscoveredImage
-		elif value == 0:
+		elif value == States.CLEAN:
 			return self.discoveredImage
 		elif value == 1:
 			return self.oneMineImage
@@ -121,15 +126,13 @@ class MSGraphicalInterface(object):
 		elif value == 7:
 			return self.sevenMineImage
 		elif value == 8:
-			return self.eigthMinesImage
-		elif value == 9:
+			return self.eightMinesImage
+		elif value == States.BOMB:
 			return self.bombImage
-		elif value == 10:
+		elif value == States.FLAG:
 			return self.flagImage
-		elif value == 11:
+		elif value == States.QUESTIONMARK:
 			return self.questionMarkImage
-		else:
-			return self.bombImage
 
 	def update(self,changingButtons):
 		for toUpdateButton in changingButtons:

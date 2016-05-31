@@ -1,6 +1,11 @@
 from random import randint
 import copy
 
+def enum(**enums):
+	return type('Enum', (), enums)
+
+States = enum(UNDISCOVERED=-1,CLEAN=0,BOMB=9,FLAG=10,QUESTIONMARK=11)
+
 class MSGrid(object):
 	def __init__(self,heigth,width,mines):
 		self.mapWithoutFog = []
@@ -11,33 +16,33 @@ class MSGrid(object):
 		self.numberOfMinesLeft = mines
 
 	def generate(self):
-		self.mapWithoutFog = [[0]*self.width for row in range(self.heigth)]
+		self.mapWithoutFog = [[States.CLEAN]*self.width for row in range(self.heigth)]
 		for i in range(self.numberOfMines):
 			self.addBomb()
 		booleanMap = copy.deepcopy(self.mapWithoutFog)
 		self.numerizeMap(booleanMap)
 
-		self.mapWithFog = [[-1]*self.width for row in range(self.heigth)]
+		self.mapWithFog = [[States.UNDISCOVERED]*self.width for row in range(self.heigth)]
 
 	def addBomb(self):
 		bombNotPlaced = True
 		while bombNotPlaced:
 			x = randint(0,self.width-1)
 			y = randint(0,self.heigth-1)
-			if self.mapWithoutFog[y][x] == 0:
-				self.mapWithoutFog[y][x] = 1
+			if self.mapWithoutFog[y][x] == States.CLEAN:
+				self.mapWithoutFog[y][x] = States.BOMB
 				bombNotPlaced = False
 
 	def numerizeMap(self, booleanMap):
 		for i in range(self.width):
 			for j in range(self.heigth):
-				if booleanMap[j][i] == 1:
-					self.mapWithoutFog[j][i] = 9
+				if booleanMap[j][i] == States.BOMB:
+					self.mapWithoutFog[j][i] = States.BOMB
 				else:
 					neighbourMines = 0
 					for x in range(max(0, i-1), min(i+2, self.width)):
 						for y in range(max(0, j-1), min(j+2, self.heigth)):
-							if booleanMap[y][x] == 1:
+							if booleanMap[y][x] == States.BOMB:
 								neighbourMines += 1
 					self.mapWithoutFog[j][i] = neighbourMines
 
@@ -63,21 +68,21 @@ class MSGrid(object):
 			self.intelligentReveal(x,y)
 
 	def isBomb(self,x,y):
-		return(self.mapWithoutFog[y][x] == 9)
+		return(self.mapWithoutFog[y][x] == States.BOMB)
 
 	def flag(self,x,y):
-		if self.mapWithFog[y][x] == 10:
-			self.mapWithFog[y][x] = 11
+		if self.mapWithFog[y][x] == States.FLAG:
+			self.mapWithFog[y][x] = States.QUESTIONMARK
 			self.numberOfMinesLeft += 1
-		elif self.mapWithFog[y][x] == -1:
-			 self.mapWithFog[y][x] = 10
+		elif self.mapWithFog[y][x] == States.UNDISCOVERED:
+			 self.mapWithFog[y][x] = States.FLAG
 			 self.numberOfMinesLeft -= 1
-		elif self.mapWithFog[y][x] == 11:
-			 self.mapWithFog[y][x] = -1
+		elif self.mapWithFog[y][x] == States.QUESTIONMARK:
+			 self.mapWithFog[y][x] = States.UNDISCOVERED
 		return self.mapWithFog[y][x]
 
 	def isntFlag(self,x,y):
-		return(self.mapWithFog[y][x] != 10)
+		return(self.mapWithFog[y][x] != States.FLAG)
 
 	def reveal(self,x,y):
 		self.mapWithFog[y][x] = self.mapWithoutFog[y][x]
@@ -85,7 +90,7 @@ class MSGrid(object):
 	def intelligentReveal(self,x,y):
 		self.mapWithFog[y][x] = self.mapWithoutFog[y][x]
 		toUpdateCells = [[x,y,self.mapWithoutFog[y][x]]]
-		if self.mapWithFog[y][x] == 0:
+		if self.mapWithFog[y][x] == States.CLEAN:
 			for i in range(max(0, x-1), min(x+2, self.width)):
 				for j in range(max(0, y-1), min(y+2, self.heigth)):
 					if self.mapWithFog[j][i] == -1:
@@ -96,7 +101,7 @@ class MSGrid(object):
 		numberOfFlags = 0
 		for i in range(max(0, x-1), min(x+2, self.width)):
 			for j in range(max(0, y-1), min(y+2, self.heigth)):
-				if self.mapWithFog[j][i] == 10:
+				if self.mapWithFog[j][i] == States.FLAG:
 					numberOfFlags +=1
 		return (numberOfFlags == self.mapWithoutFog[y][x])
 
@@ -116,7 +121,7 @@ class MSGrid(object):
 		isFinished = True
 		for i in range(self.width):
 			for j in range(self.heigth):
-				if self.mapWithoutFog[j][i] != 9 and self.mapWithFog[j][i] == -1:
+				if self.mapWithoutFog[j][i] != States.BOMB and self.mapWithFog[j][i] == States.UNDISCOVERED:
 					isFinished = False
 		return isFinished
 
