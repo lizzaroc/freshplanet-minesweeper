@@ -3,6 +3,8 @@ from tkMessageBox import *
 from grid import MSGrid
 import sys
 
+from PIL import ImageTk
+
 class MSGraphicalInterface(object):
 	def __init__(self):
 		self.grid = MSGrid(20,20,30)
@@ -11,6 +13,7 @@ class MSGraphicalInterface(object):
 		self.window = Tk()
 		self.askGridCanvas = Canvas(self.window)
 		self.gridCanvas=Canvas(self.window)
+		self.loadImages()
 		self.askGridFormat()
 
 	def askGridFormat(self):
@@ -60,8 +63,8 @@ class MSGraphicalInterface(object):
 		self.display()
 		
 	def display(self):
-		Grid.rowconfigure(self.window, 0, weight=1)
-		Grid.columnconfigure(self.window, 0, weight=1)
+		Grid.rowconfigure(self.gridCanvas, 0, weight=1)
+		Grid.columnconfigure(self.gridCanvas, 0, weight=1)
 
 		self.gridCanvas.grid(row=0, column=0, sticky=N+S+E+W)
 		grid=Frame(self.gridCanvas)
@@ -75,21 +78,65 @@ class MSGraphicalInterface(object):
 		changingButtons = []
 		for x in range(self.grid.width):
 			for y in range(self.grid.heigth):
-				self.buttonsGrid[y][x] = Button(self.gridCanvas, text="", command=self.leftClickWrapper(x,y))
+				self.buttonsGrid[y][x] = Button(self.gridCanvas,command=self.leftClickWrapper(x,y))
+				self.buttonsGrid[y][x].config(image = self.undiscoveredImage, width=30, height=22)
 				self.buttonsGrid[y][x].bind("<Button-2>", self.rightClickWrapper(0,x,y))
 				self.buttonsGrid[y][x].bind("<Button-3>", self.doubleClickWrapper(0,x,y))
-				self.buttonsGrid[y][x].config(height = 1, width = 1)
 				self.buttonsGrid[y][x].grid(column=x, row=y, sticky=N+S+E+W)
 
 		self.update(changingButtons)
+
+	def loadImages(self):
+		self.undiscoveredImage = ImageTk.PhotoImage(master = self.gridCanvas, file= "undiscovered.gif")
+		self.discoveredImage = ImageTk.PhotoImage(master = self.gridCanvas, file= "discovered.gif")
+		self.oneMineImage = ImageTk.PhotoImage(master = self.gridCanvas, file = "1.gif")
+		self.twoMinesImage = ImageTk.PhotoImage(master= self.gridCanvas, file = "2.gif")
+		self.threeMineImage = ImageTk.PhotoImage(master = self.gridCanvas, file = "3.gif")
+		self.fourMinesImage = ImageTk.PhotoImage(master= self.gridCanvas, file = "4.gif")
+		self.fiveMineImage = ImageTk.PhotoImage(master = self.gridCanvas, file = "5.gif")
+		self.sixMinesImage = ImageTk.PhotoImage(master= self.gridCanvas, file = "6.gif")
+		self.sevenMineImage = ImageTk.PhotoImage(master = self.gridCanvas, file = "7.gif")
+		self.eigthMinesImage = ImageTk.PhotoImage(master= self.gridCanvas, file = "8.gif")
+		self.bombImage =ImageTk.PhotoImage(master = self.gridCanvas, file = "bomb.gif")
+		self.flagImage = ImageTk.PhotoImage(master= self.gridCanvas, file = "flag.gif")
+		self.questionMarkImage = ImageTk.PhotoImage(master = self.gridCanvas, file = "questionMark.gif")
+
+	def imageForValue(self,value):
+		if value == -1:
+			return self.undiscoveredImage
+		elif value == 0:
+			return self.discoveredImage
+		elif value == 1:
+			return self.oneMineImage
+		elif value == 2:
+			return self.twoMinesImage
+		elif value == 3:
+			return self.threeMineImage
+		elif value == 4:
+			return self.fourMinesImage
+		elif value == 5:
+			return self.fiveMineImage
+		elif value == 6:
+			return self.sixMinesImage
+		elif value == 7:
+			return self.sevenMineImage
+		elif value == 8:
+			return self.eigthMinesImage
+		elif value == 9:
+			return self.bombImage
+		elif value == 10:
+			return self.flagImage
+		elif value == 11:
+			return self.questionMarkImage
+		else:
+			return self.bombImage
 
 	def update(self,changingButtons):
 		for toUpdateButton in changingButtons:
 			x = toUpdateButton[0]
 			y = toUpdateButton[1]
 			value = toUpdateButton[2]
-			self.buttonsGrid[y][x].config(text=str(self.grid.mapWithFog[y][x]))
-
+			self.buttonsGrid[y][x].config(image = self.imageForValue(value), width=30, height=22)
 
 	def leftClickWrapper(self,x,y):
 		def hasLeftClicked(i=x,j=y):
