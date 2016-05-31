@@ -7,23 +7,25 @@ class MSGraphicalInterface(object):
 	def __init__(self):
 		self.grid = MSGrid(20,20,30)
 		self.buttonsGrid = [[0 for i in range(self.grid.width)] for j in range(self.grid.heigth)]
+		NoDefaultRoot()
 		self.window = Tk()
+		self.askGridCanvas = Canvas(self.window)
 		self.gridCanvas=Canvas(self.window)
 		self.askGridFormat()
 
 	def askGridFormat(self):
-		heigthLabel = Label(self.window, text="Heigth?")
-		heigthSpinbox = Spinbox(self.window, from_=10, to=50)
+		heigthLabel = Label(self.askGridCanvas, text="Heigth?")
+		heigthSpinbox = Spinbox(self.askGridCanvas, from_=10, to=50)
 		heigthLabel.pack()
 		heigthSpinbox.pack()
 
-		widthLabel = Label(self.window, text="Width?")
-		widthSpinbox = Spinbox(self.window, from_=10, to=50)
+		widthLabel = Label(self.askGridCanvas, text="Width?")
+		widthSpinbox = Spinbox(self.askGridCanvas, from_=10, to=50)
 		widthLabel.pack()
 		widthSpinbox.pack()
 
-		minesLabel = Label(self.window, text="Number of mines?")
-		minesSpinbox = Spinbox(self.window, from_=10, to=99)
+		minesLabel = Label(self.askGridCanvas, text="Number of mines?")
+		minesSpinbox = Spinbox(self.askGridCanvas, from_=10, to=99)
 		minesLabel.pack()
 		minesSpinbox.pack()
 
@@ -33,14 +35,21 @@ class MSGraphicalInterface(object):
 			mines = int(minesSpinbox.get())
 			self.setGrid(heigth, width, mines)
 
-		okButton = Button(text='Ok', command=okButtonClicked)
+		okButton = Button(self.askGridCanvas,text='Ok', command=okButtonClicked)
 		okButton.pack()
+
+		self.askGridCanvas.pack()
 
 		self.window.mainloop()
 
 	def setGrid(self,heigth,width,mines):
-		self.window.destroy()
-		self.window = Tk()
+		self.askGridCanvas.destroy()
+		self.gridCanvas.destroy()
+		try:
+			self.minesLeftLabel1.destroy()
+		except:
+			pass
+		self.gridCanvas=Canvas(self.window)
 		self.grid = MSGrid(heigth, width, mines)
 		self.minesLeftLabel1 = Label(self.window, text="Number of mines left: " + str(self.grid.numberOfMines))
 		self.minesLeftLabel1.pack()
@@ -79,7 +88,8 @@ class MSGraphicalInterface(object):
 			x = toUpdateButton[0]
 			y = toUpdateButton[1]
 			value = toUpdateButton[2]
-			self.buttonsGrid[y][x].config(text=	str(self.grid.mapWithFog[y][x]))
+			self.buttonsGrid[y][x].config(text=str(self.grid.mapWithFog[y][x]))
+
 
 	def leftClickWrapper(self,x,y):
 		def hasLeftClicked(i=x,j=y):
@@ -90,10 +100,10 @@ class MSGraphicalInterface(object):
 				self.update(changingButtons)
 
 			if self.grid.isFinished():
-				if askyesno("Congratulations! You won!", "Wanna play again?"):
+				if askyesno("Congratulations! You won!", "Wanna play again?",master=self.gridCanvas):
 					self.setGrid(self.grid.heigth,self.grid.width,self.grid.numberOfMines)
 				else:
-					showinfo("Okay :(", "See you next time!")
+					showinfo("Okay :(", "See you next time!",master=self.gridCanvas)
 					self.quit()
 
 		return hasLeftClicked
@@ -114,10 +124,10 @@ class MSGraphicalInterface(object):
 		return hasDoubleClicked
 
 	def hasLost(self):
-		if askretrycancel("You lost", "Wanna try again?"):
+		if askretrycancel("You lost", "Wanna try again?",master=self.gridCanvas):
 			self.setGrid(self.grid.heigth,self.grid.width,self.grid.numberOfMines)
 		else:
-			showinfo("Okay :(", "See you next time!")
+			showinfo("Okay :(", "See you next time!",master=self.gridCanvas)
 			self.quit()
 
 	def quit(self):
