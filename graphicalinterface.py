@@ -102,19 +102,19 @@ class MSGraphicalInterface(object):
 		self.update(changingButtons)
 
 	def loadImages(self):
-		self.undiscoveredImage = PhotoImage(master = self.gridCanvas, file= "undiscovered.gif")
-		self.discoveredImage = PhotoImage(master = self.gridCanvas, file= "discovered.gif")
-		self.oneMineImage = PhotoImage(master = self.gridCanvas, file = "1.gif")
-		self.twoMinesImage = PhotoImage(master= self.gridCanvas, file = "2.gif")
-		self.threeMineImage = PhotoImage(master = self.gridCanvas, file = "3.gif")
-		self.fourMinesImage = PhotoImage(master= self.gridCanvas, file = "4.gif")
-		self.fiveMineImage = PhotoImage(master = self.gridCanvas, file = "5.gif")
-		self.sixMinesImage = PhotoImage(master= self.gridCanvas, file = "6.gif")
-		self.sevenMineImage = PhotoImage(master = self.gridCanvas, file = "7.gif")
-		self.eightMinesImage = PhotoImage(master= self.gridCanvas, file = "8.gif")
-		self.bombImage =PhotoImage(master = self.gridCanvas, file = "bomb.gif")
-		self.flagImage = PhotoImage(master= self.gridCanvas, file = "flag.gif")
-		self.questionMarkImage = PhotoImage(master = self.gridCanvas, file = "questionMark.gif")
+		self.undiscoveredImage = PhotoImage(master = self.gridCanvas, file= "Sprites/undiscovered.gif")
+		self.discoveredImage = PhotoImage(master = self.gridCanvas, file= "Sprites/discovered.gif")
+		self.oneMineImage = PhotoImage(master = self.gridCanvas, file = "Sprites/1.gif")
+		self.twoMinesImage = PhotoImage(master= self.gridCanvas, file = "Sprites/2.gif")
+		self.threeMineImage = PhotoImage(master = self.gridCanvas, file = "Sprites/3.gif")
+		self.fourMinesImage = PhotoImage(master= self.gridCanvas, file = "Sprites/4.gif")
+		self.fiveMineImage = PhotoImage(master = self.gridCanvas, file = "Sprites/5.gif")
+		self.sixMinesImage = PhotoImage(master= self.gridCanvas, file = "Sprites/6.gif")
+		self.sevenMineImage = PhotoImage(master = self.gridCanvas, file = "Sprites/7.gif")
+		self.eightMinesImage = PhotoImage(master= self.gridCanvas, file = "Sprites/8.gif")
+		self.bombImage =PhotoImage(master = self.gridCanvas, file = "Sprites/bomb.gif")
+		self.flagImage = PhotoImage(master= self.gridCanvas, file = "Sprites/flag.gif")
+		self.questionMarkImage = PhotoImage(master = self.gridCanvas, file = "Sprites/questionMark.gif")
 
 	def imageForValue(self,value):
 		if value == States.UNDISCOVERED:
