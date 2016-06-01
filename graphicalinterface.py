@@ -1,9 +1,17 @@
-from Tkinter import *
-from tkMessageBox import *
+try:
+	from Tkinter import *
+except:
+	from tkinter import *
+
+try:
+	import tkMessageBox as messageBox
+except:
+	from tkinter import messagebox as messageBox
+
 from grid import MSGrid
 import sys
 
-from PIL import ImageTk
+#from PIL import ImageTk
 
 def enum(**enums):
 	return type('Enum', (), enums)
@@ -94,19 +102,19 @@ class MSGraphicalInterface(object):
 		self.update(changingButtons)
 
 	def loadImages(self):
-		self.undiscoveredImage = ImageTk.PhotoImage(master = self.gridCanvas, file= "undiscovered.gif")
-		self.discoveredImage = ImageTk.PhotoImage(master = self.gridCanvas, file= "discovered.gif")
-		self.oneMineImage = ImageTk.PhotoImage(master = self.gridCanvas, file = "1.gif")
-		self.twoMinesImage = ImageTk.PhotoImage(master= self.gridCanvas, file = "2.gif")
-		self.threeMineImage = ImageTk.PhotoImage(master = self.gridCanvas, file = "3.gif")
-		self.fourMinesImage = ImageTk.PhotoImage(master= self.gridCanvas, file = "4.gif")
-		self.fiveMineImage = ImageTk.PhotoImage(master = self.gridCanvas, file = "5.gif")
-		self.sixMinesImage = ImageTk.PhotoImage(master= self.gridCanvas, file = "6.gif")
-		self.sevenMineImage = ImageTk.PhotoImage(master = self.gridCanvas, file = "7.gif")
-		self.eightMinesImage = ImageTk.PhotoImage(master= self.gridCanvas, file = "8.gif")
-		self.bombImage =ImageTk.PhotoImage(master = self.gridCanvas, file = "bomb.gif")
-		self.flagImage = ImageTk.PhotoImage(master= self.gridCanvas, file = "flag.gif")
-		self.questionMarkImage = ImageTk.PhotoImage(master = self.gridCanvas, file = "questionMark.gif")
+		self.undiscoveredImage = PhotoImage(master = self.gridCanvas, file= "undiscovered.gif")
+		self.discoveredImage = PhotoImage(master = self.gridCanvas, file= "discovered.gif")
+		self.oneMineImage = PhotoImage(master = self.gridCanvas, file = "1.gif")
+		self.twoMinesImage = PhotoImage(master= self.gridCanvas, file = "2.gif")
+		self.threeMineImage = PhotoImage(master = self.gridCanvas, file = "3.gif")
+		self.fourMinesImage = PhotoImage(master= self.gridCanvas, file = "4.gif")
+		self.fiveMineImage = PhotoImage(master = self.gridCanvas, file = "5.gif")
+		self.sixMinesImage = PhotoImage(master= self.gridCanvas, file = "6.gif")
+		self.sevenMineImage = PhotoImage(master = self.gridCanvas, file = "7.gif")
+		self.eightMinesImage = PhotoImage(master= self.gridCanvas, file = "8.gif")
+		self.bombImage =PhotoImage(master = self.gridCanvas, file = "bomb.gif")
+		self.flagImage = PhotoImage(master= self.gridCanvas, file = "flag.gif")
+		self.questionMarkImage = PhotoImage(master = self.gridCanvas, file = "questionMark.gif")
 
 	def imageForValue(self,value):
 		if value == States.UNDISCOVERED:
@@ -157,10 +165,10 @@ class MSGraphicalInterface(object):
 				self.update(changingButtons)
 
 			if self.grid.isFinished():
-				if askyesno("Congratulations! You won!", "Wanna play again?",master=self.gridCanvas):
+				if messageBox.askyesno("Congratulations! You won!", "Wanna play again?",master=self.gridCanvas):
 					self.setGrid(self.grid.heigth,self.grid.width,self.grid.numberOfMines)
 				else:
-					showinfo("Okay :(", "See you next time!",master=self.gridCanvas)
+					messageBox.showinfo("Okay :(", "See you next time!",master=self.gridCanvas)
 					self.quit()
 
 		return hasLeftClicked
@@ -173,7 +181,6 @@ class MSGraphicalInterface(object):
 
 	def doubleClickWrapper(self,event,x,y):
 		def hasDoubleClicked(Event=None,i=x,j=y):
-			print("double clic")
 			hasFailed,toUpdate = self.grid.flagReveal(i,j)
 			self.update(toUpdate)
 			if hasFailed:
@@ -181,10 +188,10 @@ class MSGraphicalInterface(object):
 		return hasDoubleClicked
 
 	def hasLost(self):
-		if askretrycancel("You lost", "Wanna try again?",master=self.gridCanvas):
+		if messageBox.askretrycancel("You lost", "Wanna try again?",master=self.gridCanvas):
 			self.setGrid(self.grid.heigth,self.grid.width,self.grid.numberOfMines)
 		else:
-			showinfo("Okay :(", "See you next time!",master=self.gridCanvas)
+			messageBox.showinfo("Okay :(", "See you next time!",master=self.gridCanvas)
 			self.quit()
 
 	def quit(self):
